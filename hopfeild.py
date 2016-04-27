@@ -5,6 +5,7 @@ from time import sleep
 
 #np.set_printoptions(threshold=np.nan)
 
+working_weights = None
 
 def convert_from(data):
     data = np.array(data)
@@ -82,11 +83,18 @@ def train(data):
     for i in range(d):
         w[i, i] = 0
         q[i, i] = 0
-
+    
+    global working_weights
+    working_weights = w
     return w
 
+def set_working_weights(w):
+    global working_weights
+    working_weights = w
 
-def recall(w, data, n=10):
+def recall(data, w=None, n=10):
+    if w == None:
+        w = copy.copy(working_weights)
     data = convert_to(data)
     order = list(range(len(data)))
     for _ in range(n):
