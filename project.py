@@ -61,19 +61,21 @@ def main():
     avg_test = sess.run(accuracy, feed_dict={x: image_averages, y_: l}) * 100
 
     print clean_test, avg_test
-
-    count = 100
-    interval = 100/count
-    p = [r*interval for r in range(count)]
-    num_cpus = mp.cpu_count()
-
-    pool = mp.Pool(processes=num_cpus)
-
-    t = pool.map(make_funky, p)
-
-    for funky_data, percent_change in t:
-        dirty_test = sess.run(accuracy, feed_dict={x: funky_data, y_: mnist.test.labels}) * 100
-        print dirty_test, percent_change
+    
+    #Clean Test
+    if True:
+        count = 100
+        interval = 100/count
+        p = [r*interval for r in range(count)]
+        num_cpus = mp.cpu_count()
+        
+        pool = mp.Pool(processes=num_cpus)
+        
+        t = pool.map(make_funky, p)
+        
+        for funky_data, percent_change in t:
+            dirty_test = sess.run(accuracy, feed_dict={x: funky_data, y_: mnist.test.labels}) * 100
+            print dirty_test, percent_change
 
     # testing the hopfeild with 0's and 1's
     if False:
@@ -135,15 +137,16 @@ def getimageavg(mnist):
 
 def make_funky(chance):
     funky_data = copy.deepcopy(mnist.test.images)
-    for i in range(len(funky_data)):
-        for j in range(len(funky_data[i])):
-            if random.randint(0, 100) < chance:
-                temp = funky_data[i, j] + random.random() * 2 - 1
-                if temp < 0:
-                    temp = 0
-                elif temp > 1:
-                    temp = 1
-                funky_data[i, j] = temp
+    for _ in range(2):
+        for i in range(len(funky_data)):
+            for j in range(len(funky_data[i])):
+                if random.randint(0, 100) < chance:
+                    temp = funky_data[i, j] + random.random() * 2 - 1
+                    if temp < 0:
+                        temp = 0
+                    elif temp > 1:
+                        temp = 1
+                    funky_data[i, j] = temp
     percent_change = np.mean(((funky_data + 1) - (mnist.test.images + 1)) / (mnist.test.images + 1)) * 100
     return funky_data, percent_change
 
