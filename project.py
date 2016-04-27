@@ -63,7 +63,7 @@ def main():
     print clean_test, avg_test
     
     #Clean Test
-    if True:
+    if False:
         count = 100
         interval = 100/count
         p = [r*interval for r in range(count)]
@@ -78,26 +78,49 @@ def main():
             print dirty_test, percent_change
 
     # testing the hopfeild with 0's and 1's
-    if False:
+    if True:
+        #print "Starting 1's and 0's"
         hop_01 = copy.deepcopy(mnist.test.images)
-
+        num_cpus = mp.cpu_count()
+        pool = mp.Pool(processes=num_cpus)
         images = []
         labels = []
+        #print "Sorting"
         for i,image in enumerate(hop_01):
             if mnist.test.labels[i][0] == 1 or mnist.test.labels[i][1] == 1:
                 images.append(image)
                 labels.append(mnist.test.labels[i])
-
+        #print "Finished Sorting"
         images = np.array(images)
-        labels = np.array(labels)
+        labels = np.array(labels)       
+        
+        control_score = sess.run(accuracy, feed_dict={x: images, y_:labels})*100
+        print control_score
+        
+        count = 10
+        interval = 100/count
+        for c in range(count):        
+            funky_images = copy.deepcopy(images)
+            for i in range(len(funky_images)):
+                for j in range(len(funky_images[i])):
+                    if random.randint(0,100) < c*interval:
+                        temp = funky_images[i, j] + random.random() * 2 - 1
+                        if temp < 0:
+                            temp = 0
+                        elif temp > 1:
+                            temp = 1
+                        funky_images[i, j] = temp
+                        
+            percent_change = np.mean(((funky_images + 1) - (images + 1)) / (images + 1)) * 100        
+            hopfeild.set_working_weights(hopfeild_weights)
+            pre_hop_test = sess.run(accuracy, feed_dict={x: funky_images, y_: labels}) * 100
+            #print("starting recall")
+            images = np.array(pool.map(hopfeild.recall, funky_images))
+            # images = np.array([hopfeild.recall(hopfeild_weights, image) for image in images])
+            #print("finished recall")
+            hop_test = sess.run(accuracy, feed_dict={x: images, y_: labels}) * 100
 
-        pre_hop_test = sess.run(accuracy, feed_dict={x: images, y_: labels}) * 100
-        print("starting recall")
-        images = np.array([hopfeild.recall(hopfeild_weights, image) for image in images])
-        print("finished recall")
-        hop_test = sess.run(accuracy, feed_dict={x: images, y_: labels}) * 100
-
-        print pre_hop_test, hop_test
+            print pre_hop_test, hop_test, percent_change
 
 
 def getimageavg(mnist):
