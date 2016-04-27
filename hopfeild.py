@@ -51,13 +51,6 @@ def expand(data, n=12):
 
 
 def train(data):
-    # temp = []
-    # for point in data:
-    #    point.shape = (28, 28)
-    #    point = trim(point)
-    #    point = point.reshape((point.size,))
-    #    temp.append(point)
-    # data = temp
     data = convert_to(data)
     n = len(data)
     d = len(data[0])
@@ -97,7 +90,8 @@ def recall(data, w=None, n=10):
         w = copy.copy(working_weights)
     data = convert_to(data)
     order = list(range(len(data)))
-    for _ in range(n):
+    order2 = list(range(len(data)))
+    for p in range(n):
         np.random.shuffle(order)
         for i in order:
             temp = np.sum(w[i, :]*data)
@@ -106,6 +100,17 @@ def recall(data, w=None, n=10):
             else:
                 temp = -1
             data[i] = temp
+        if True:    #adding random elemets to "shake it up"
+            np.random.shuffle(order2)
+            if 6 - p > 0:
+                count = 2**(6-p)
+            else:
+                count = 0
+            for j in range(count):
+                if data[order2[j]] == 1:
+                    data[order2[j]] = -1
+                else:
+                    data[order2[j]] = 1    
 
     data = convert_from(data)
     return data

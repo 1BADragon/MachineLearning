@@ -97,9 +97,9 @@ def main():
         control_score = sess.run(accuracy, feed_dict={x: images, y_:labels})*100
         print control_score
         
-        count = 10
+        count = 100
         interval = 100/count
-        for c in range(count):        
+        for c in range(count+1):        
             funky_images = copy.deepcopy(images)
             for i in range(len(funky_images)):
                 for j in range(len(funky_images[i])):
