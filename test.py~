@@ -1,0 +1,24 @@
+#!/usr/bin/env python
+
+import numpy as np
+import Image
+from tensorflow.examples.tutorials.mnist import input_data
+
+mnist = input_data.read_data_sets("./MNIST_data/", one_hot=True)
+
+images = mnist.test.images
+labels = mnist.test.labels
+
+zero = []
+
+for i in range(len(labels)):
+    if labels[i][0] == 1.:
+        zero.append(images[i])
+
+sum = zero[0]
+
+for i in range(1, len(zero)):
+    sum += zero[i]
+
+
+print sum
