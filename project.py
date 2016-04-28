@@ -157,15 +157,16 @@ def make_funkier(blob):
     images = blob[1]
     funky_images = copy.deepcopy(images)
     chance = blob[0]
-    for i in range(len(funky_images)):
-        for j in range(len(funky_images[i])):
-            if random.randint(0,100) < chance:
-                temp = funky_images[i, j] + random.random() * 2 - 1
-                if temp < 0:
-                    temp = 0
-                elif temp > 1:
-                    temp = 1
-                funky_images[i, j] = temp                
+    for _ in range(2):
+        for i in range(len(funky_images)):
+            for j in range(len(funky_images[i])):
+                if random.randint(0,100) < chance:
+                    temp = funky_images[i, j] + random.random() * 2 - 1
+                    if temp < 0:
+                        temp = 0
+                    elif temp > 1:
+                        temp = 1
+                    funky_images[i, j] = temp                
     percent_change = np.mean(((funky_images + 1) - (images + 1)) / (images + 1)) * 100
     return funky_images, percent_change
 
