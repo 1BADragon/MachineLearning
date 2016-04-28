@@ -157,7 +157,7 @@ def make_funkier(blob):
     images = blob[1]
     funky_images = copy.deepcopy(images)
     chance = blob[0]
-    for _ in range(2):
+    for _ in range(5):
         for i in range(len(funky_images)):
             for j in range(len(funky_images[i])):
                 if random.randint(0,100) < chance:
