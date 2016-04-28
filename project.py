@@ -97,22 +97,18 @@ def main():
         control_score = sess.run(accuracy, feed_dict={x: images, y_:labels})*100
         print control_score
         
-        count = 10
+        count = 100
         interval = 100/count
-        for c in range(count):        
-            funky_images = copy.deepcopy(images)
-            for i in range(len(funky_images)):
-                for j in range(len(funky_images[i])):
-                    if random.randint(0,100) < c*interval:
-                        temp = funky_images[i, j] + random.random() * 2 - 1
-                        if temp < 0:
-                            temp = 0
-                        elif temp > 1:
-                            temp = 1
-                        funky_images[i, j] = temp
-                        
-            percent_change = np.mean(((funky_images + 1) - (images + 1)) / (images + 1)) * 100        
-            hopfeild.set_working_weights(hopfeild_weights)
+        #this is getting sloppy
+        p = [c*interval for c in range(count+1)]
+        
+        zipped_data = []
+        for t in p:
+            zipped_data.append((t, images))      
+        
+        plorp = pool.map(make_funkier, zipped_data)
+        hopfeild.set_working_weights(hopfeild_weights)
+        for funky_images, percent_change in plorp:           
             pre_hop_test = sess.run(accuracy, feed_dict={x: funky_images, y_: labels}) * 100
             #print("starting recall")
             images = np.array(pool.map(hopfeild.recall, funky_images))
@@ -157,6 +153,21 @@ def getimageavg(mnist):
 
     return image_average
 
+def make_funkier(blob):
+    images = blob[1]
+    funky_images = copy.deepcopy(images)
+    chance = blob[0]
+    for i in range(len(funky_images)):
+        for j in range(len(funky_images[i])):
+            if random.randint(0,100) < chance:
+                temp = funky_images[i, j] + random.random() * 2 - 1
+                if temp < 0:
+                    temp = 0
+                elif temp > 1:
+                    temp = 1
+                funky_images[i, j] = temp                
+    percent_change = np.mean(((funky_images + 1) - (images + 1)) / (images + 1)) * 100
+    return funky_images, percent_change
 
 def make_funky(chance):
     funky_data = copy.deepcopy(mnist.test.images)

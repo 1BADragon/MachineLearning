@@ -103,3 +103,10 @@ Extracting ./MNIST_data/t10k-labels-idx1-ubyte.gz
 18.2999998331 28.5440891981
 18.1799992919 28.7715137005
 18.0800005794 28.948366642
+
+
+Extracting ./MNIST_data/train-images-idx3-ubyte.gz
+Extracting ./MNIST_data/train-labels-idx1-ubyte.gz
+Extracting ./MNIST_data/t10k-images-idx3-ubyte.gz
+Extracting ./MNIST_data/t10k-labels-idx1-ubyte.gz
+90.7400012016 100.0
