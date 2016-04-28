@@ -97,7 +97,7 @@ def main():
         control_score = sess.run(accuracy, feed_dict={x: images, y_:labels})*100
         print control_score
         
-        count = 1000
+        count = 100
         interval = 100/count
         #this is getting sloppy
         p = [c*interval for c in range(count+1)]
@@ -157,10 +157,10 @@ def make_funkier(blob):
     images = blob[1]
     funky_images = copy.deepcopy(images)
     chance = blob[0]
-    for _ in range(3):
+    for _ in range(4):
         for i in range(len(funky_images)):
             for j in range(len(funky_images[i])):
-                if random.randint(0,100) < chance:
+                if random.random() * 100 < chance:
                     temp = funky_images[i, j] + random.random() * 2 - 1
                     if temp < 0:
                         temp = 0
