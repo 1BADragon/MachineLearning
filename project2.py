@@ -75,7 +75,7 @@ def main():
     print control_run, avg_run
 
     # Noise Test
-    if True:
+    if False:
         count = 100
         interval = 100/count
         p = [r*interval for r in range(count)]
@@ -90,7 +90,7 @@ def main():
             print dirty_test, percent_change
 
     # testing the hopfeild with 0's and 1's
-    if False:
+    if True:
         #print "Starting 1's and 0's"
         hop_01 = copy.deepcopy(mnist.test.images)
         num_cpus = mp.cpu_count()
@@ -106,7 +106,7 @@ def main():
         images = np.array(images)
         labels = np.array(labels)       
         
-        control_score = sess.run(accuracy, feed_dict={x: images, y_:labels})*100
+        control_score = accuracy.eval(feed_dict={x: images, y_:labels, keep_prob: 1.0})*100
         print control_score
         
         count = 100
@@ -116,17 +116,17 @@ def main():
         
         zipped_data = []
         for t in p:
-            zipped_data.append((t, images))      
+            zipped_data.append((t, images))   
         
         plorp = pool.map(make_funkier, zipped_data)
         hopfeild.set_working_weights(hopfeild_weights)
         for funky_images, percent_change in plorp:           
-            pre_hop_test = sess.run(accuracy, feed_dict={x: funky_images, y_: labels}) * 100
+            pre_hop_test = accuracy.eval(feed_dict={x: funky_images, y_: labels, keep_prob: 1.0}) * 100
             #print("starting recall")
             images = np.array(pool.map(hopfeild.recall, funky_images))
             # images = np.array([hopfeild.recall(hopfeild_weights, image) for image in images])
             #print("finished recall")
-            hop_test = sess.run(accuracy, feed_dict={x: images, y_: labels}) * 100
+            hop_test = accuracy.eval(feed_dict={x: images, y_: labels, keep_prob: 1.0}) * 100
 
             print pre_hop_test, hop_test, percent_change
 
@@ -218,4 +218,3 @@ def max_pool_2x2(x):
 
 if __name__ == "__main__":
     main()
->>>>>>> b58be77b88028007ecf1eb87ff258d6a0ab326dd
