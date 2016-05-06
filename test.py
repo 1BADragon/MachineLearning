@@ -21,25 +21,20 @@ def test():
     w = hopfeild.train(np.array(avg[data_lower:data_range]))
     img = Image.new('L', (28, 28))
     img2 = Image.new('L', (28, 28))
-    for i in range(data_lower, data_range):
-        pic = copy.copy(avg[i])
-        #pic = np.zeros(avg[i].shape)
-        for i in range(pic.size):
-            if random.randint(0, 100) < 50:
-                temp = pic[i] + random.random() * 2 - 1
-                if temp < 0:
-                    temp = 0
-                elif temp > 1:
-                    temp = 1
-                pic[i] = temp
-        img.putdata((pic * 255).tolist())
-        img.show()
-        pic = hopfeild.recall(w, np.array(pic), 10)
-        #print pic
-        pic *= 255
-        #print pic
-        img2.putdata(pic.tolist())
-        img2.show()
+    pic = mnist.test.images[0]
+    img.putdata((pic * 255).tolist())
+    img.save("clean.png", "PNG")
+    for i in range(pic.size):
+        if random.randint(0, 100) < 70:
+            temp = pic[i] + random.random() * 2 - 1
+            if temp < 0:
+                temp = 0
+            elif temp > 1:
+                temp = 1
+            pic[i] = temp
+    img.putdata((pic * 255).tolist())
+    img.save("dirty.png", "PNG")
+
 
 
 def getimageavg(mnist):
