@@ -6,6 +6,7 @@
 \usepackage{graphicx}
 \usepackage{subfig}
 \usepackage{floatrow}
+\usepackage{hyperref}
 
 \author{
 	\IEEEauthorblockN{MatthewBrown\\}
@@ -23,7 +24,7 @@
 	\section{Introduction}
 		Throughout the machine learning course students learned a number of different techniques for classifying data. Two mechanisms that stood out to me were the neural network and the hopfield network. A neural network is a mechanism for classifying data based on a system of mathematical weights that determine the classification of a data set by determining which data points are most significant. A hopfield network is a recurrent neural network that can be trained to ``remember" various data points and can be used to recall the data points at a later time. Hopfield networks are especially good at receiving a noisy image and recalling a clean image that matches the noisy image best.
 		
-		For this experiment the MNIST handwritten digit data set was used. Images from the data set were made noisy and fed through the hopfield network then through the neural net in an attempt to identify the digits through the noise. The overall research question to this project was ``can a hopfield neural network combination filter out noise better than a neural network alone?"
+		For this experiment the MNIST handwritten digit data set was used. Images from the data set were made noisy and fed through the hopfield network then through the neural net in an attempt to identify the digits through the noise. The overall research question to this project was ``can a hopfield neural network combination filter out noise better than a neural network alone?" All work that helps answer this question is described below and can also be found on github \href{https://github.com/1BADragon/MachineLearning}{here}.
 		
 	\section{The Experiment}
 		The experiment preformed for this paper is composed of two parts. For first part, a neural net's accuracy was tested while slowly increasing the amount of noise in the input data. In the second part of the experiment noisy data was first fed through a hopfield network then through the neural net. For bot experiments both single-layer and multi-layer neural nets were used. In this section the details of the components used will be explained as well as the results for the experiment.
