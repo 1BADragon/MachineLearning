@@ -10,31 +10,63 @@ import copy
 from tensorflow.examples.tutorials.mnist import input_data
 np.set_printoptions(threshold=np.nan)
 
-data_range = 10
-data_lower = 8
-
-
 def test():
     mnist = input_data.read_data_sets("./MNIST_data/", one_hot=True)
-    avg = getimageavg(mnist)
-    # print_data(avg)
-    w = hopfeild.train(np.array(avg[data_lower:data_range]))
-    img = Image.new('L', (28, 28))
-    img2 = Image.new('L', (28, 28))
-    pic = mnist.test.images[0]
-    img.putdata((pic * 255).tolist())
-    img.save("clean.png", "PNG")
-    for i in range(pic.size):
-        if random.randint(0, 100) < 70:
-            temp = pic[i] + random.random() * 2 - 1
-            if temp < 0:
-                temp = 0
-            elif temp > 1:
-                temp = 1
-            pic[i] = temp
-    img.putdata((pic * 255).tolist())
-    img.save("dirty.png", "PNG")
+    testimg = blackandwhite(mnist.test.images[0])
 
+    img = Image.new('L', (28, 28))
+    img.putdata((testimg*255).tolist())
+    img.show()
+
+    testimg.shape = (28, 28)
+    pixelVal = 0
+    while(pixelVal == 0):
+        x = random.randint(0, 27)
+        y = random.randint(0, 27)
+        pixelVal = testimg[x, y]
+
+    v = getUnitVector((random.random()*2-1, random.random()*2-1))
+
+    for i in range(20):
+        x = int(x + i*v[0])
+        y = int(y + i*v[1])
+        if 0 <= y < 28 and 28 > x >= 0:
+            for i in range(-1, 2):
+                for j in range(-1, 2):
+                    xtemp = x + i;
+                    ytemp = y + j;
+                    if xtemp > 27:
+                        xtemp = 27
+                    elif xtemp < 0:
+                        xtemp = 0;
+                    elif ytemp > 27:
+                        ytemp = 27
+                    elif ytemp < 0:
+                        ytemp = 0
+                    testimg[xtemp, ytemp] = 1
+
+    testimg.shape = (testimg.size,)
+    img.putdata((testimg * 255).tolist())
+    img.show()
+
+def getUnitVector(v):
+    v = list(v)
+    mag = 0
+    for i in v:
+        mag += i**2
+    mag = np.sqrt(mag)
+    for i, j in enumerate(v):
+        v[i] = j/mag
+    return tuple(v)
+
+
+def blackandwhite(img):
+    for i, val in enumerate(img):
+        if val < .5:
+            img[i] = 0
+        else:
+            img[i] = 1
+    return img
 
 
 def getimageavg(mnist):
